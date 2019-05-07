@@ -1,14 +1,30 @@
 package ScannerCode;
 
 import JavaLib.Token.Token;
+import JavaLib.Token.TokenMath;
+import JavaLib.Token.TokenOfOperation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 /*
-класс для анализа токенов в коде
+класс для обноружение токенов в коде
  */
 public class ScannerJavaCode {
+
+    /**
+     * @return список токенов которые пишутся слитно
+     */
+    public static ArrayList<String> tokenByRuleByDataType() {
+        ArrayList<String> stringArrayList = new ArrayList<>();
+        stringArrayList.addAll(Arrays.asList(TokenMath.tokenForTwiceOperand()));
+        stringArrayList.addAll(Arrays.asList(TokenOfOperation.tokenForTwiceOperand()));
+        stringArrayList.addAll(Arrays.asList(TokenOfOperation.tokenForTwiceOperand()));
+
+
+        return stringArrayList;
+    }
 
     /**
      * строка кода разбивается на одельные блоки стрингов и запсуется на масив стрингов
