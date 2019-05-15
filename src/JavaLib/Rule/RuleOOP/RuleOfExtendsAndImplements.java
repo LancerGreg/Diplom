@@ -31,8 +31,8 @@ public class RuleOfExtendsAndImplements {
                 return false;
             }
             boolean flag = false;
-            for (int i = 0; i < DataClass.getMyData().size(); i++) {
-                if (splitCodeBySpace.get(xstay).get(ystay + 1).equals(DataClass.getMyData().get(i).getName())) {
+            for (int i = 0; i < DataClass.myData.size(); i++) {
+                if (splitCodeBySpace.get(xstay).get(ystay + 1).equals(DataClass.myData.get(i).getName())) {
                     flag = true;
                     break;
                 }
@@ -58,8 +58,8 @@ public class RuleOfExtendsAndImplements {
                 return false;
             }
             boolean flag = false;
-            for (int i = 0; i < DataClass.getMyData().size(); i++) {
-                if (splitCodeBySpace.get(xstay).get(ystay + 1).equals(DataInterface.getMyData().get(i).getName())) {
+            for (int i = 0; i < DataClass.myData.size(); i++) {
+                if (splitCodeBySpace.get(xstay).get(ystay + 1).equals(DataInterface.myData.get(i).getName())) {
                     flag = true;
                     break;
                 }

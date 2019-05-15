@@ -19,4 +19,12 @@ public class TokenMath extends Token{
     public static String[] token() {
         return new String[]{equals, plus, minus, multiply, division, dwr, inc, ibs, ias, iam, ims, imm};
     }
+
+    public static String[] tokenForRuleOfStrongTyping() {
+        return new String[]{equals, plus, minus, multiply, division, dwr};
+    }
+
+    public static String[] tokenForTwiceOperand() {
+        return new String[]{inc, ibs, ias, iam, ims, imm};
+    }
 }

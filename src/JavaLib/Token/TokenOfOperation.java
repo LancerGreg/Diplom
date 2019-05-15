@@ -2,6 +2,8 @@ package JavaLib.Token;
 
 public class TokenOfOperation extends Token{
 
+    public static final String equals = "=";
+
     public static final String finishedOperation = ";";
     public static final String callOperation = ".";
 
@@ -14,6 +16,8 @@ public class TokenOfOperation extends Token{
 
     public static final String stringIndicatorChar = "\'";
     public static final String stringIndicatorString = "\"";
+    public static final String stringIndicatorCharTwice = "\'\'";
+    public static final String stringIndicatorStringTwice = "\"\"";
 
     public static final String stringVector = "[]";
     public static final String stringVectorOpen = "[";
@@ -25,10 +29,14 @@ public class TokenOfOperation extends Token{
 
 
     public static String[] token() {
-        return new String[]{finishedOperation, callOperation, giveOperation, bodyOperation,
+        return new String[]{equals, finishedOperation, callOperation, giveOperation, bodyOperation,
                 giveOperationOpen, giveOperationClose, bodyOperationOpen, bodyOperationClose,
                 stringVector, stringVectorOfKnow, stringSeparator,stringVectorOpen,
                 stringVectorClose, stringVectorOfKnowOpen, stringVectorOfKnowClose,
-                stringIndicatorChar, stringIndicatorString};
+                stringIndicatorChar, stringIndicatorString, stringIndicatorCharTwice, stringIndicatorStringTwice};
+    }
+
+    public static String[] tokenForTwiceOperand() {
+        return new String[]{giveOperation, bodyOperation, stringVector, stringIndicatorCharTwice, stringIndicatorStringTwice};
     }
 }
