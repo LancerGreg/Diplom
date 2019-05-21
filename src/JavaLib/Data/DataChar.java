@@ -2,23 +2,13 @@ package JavaLib.Data;
 
 public class DataChar extends Data{
 
-    private char dataString;
 
     public DataChar() {
     }
 
-    public DataChar(String name, char dataString) {
-        super(name);
+    public DataChar(String name, Object dataChar, int x, int y) {
+        super(name, dataChar, x, y);
         setType("char");
-        this.dataString = dataString;
-    }
-
-    public char getDataString() {
-        return dataString;
-    }
-
-    public void setDataString(char dataString) {
-        this.dataString = dataString;
     }
 
 }

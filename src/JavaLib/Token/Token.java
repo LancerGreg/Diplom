@@ -21,7 +21,6 @@ public class Token {
         stringArrayList.addAll(Arrays.asList(TokenCycle.token()));
         stringArrayList.addAll(Arrays.asList(TokenMath.token()));
         stringArrayList.addAll(Arrays.asList(TokenTypeData.token()));
-        stringArrayList.addAll(Arrays.asList(TokenOther.token()));
 
         return stringArrayList;
     }
