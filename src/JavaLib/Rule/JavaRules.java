@@ -1,5 +1,6 @@
 package JavaLib.Rule;
 
+import JavaLib.Rule.RuleCore.RuleOfFunction;
 import JavaLib.Rule.RuleCore.RuleOfName;
 import JavaLib.Rule.RuleCore.RuleOfStrongTyping;
 import JavaLib.Rule.RuleOOP.RuleEncapsulation;
@@ -40,6 +41,10 @@ public class JavaRules {
 
                 //проверка на строгую типизацию
                 if (!RuleOfStrongTyping.checkStrongTyping(splitCodeBySpace,
+                        splitCodeBySpace.get(i).get(j), i, j)) return false;
+
+                //проверка на правильную инициацию метода
+                if (!RuleOfFunction.checkFunction(splitCodeBySpace,
                         splitCodeBySpace.get(i).get(j), i, j)) return false;
             }
         }

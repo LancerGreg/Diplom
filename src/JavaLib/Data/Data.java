@@ -15,6 +15,7 @@ public class Data {
     private Object data;
     private int positionX;
     private int positionY;
+    private ArrayList<Data> localVar;
 
     public static ArrayList<Data> myData = new ArrayList<>();
 
@@ -66,6 +67,22 @@ public class Data {
 
     public void setPositionY(int positionY) {
         this.positionY = positionY;
+    }
+
+    public ArrayList<Data> getLocalVar() {
+        return localVar;
+    }
+
+    public void setLocalVar(ArrayList<Data> localVar) {
+        this.localVar = localVar;
+    }
+
+    public static ArrayList<Data> getMyData() {
+        return myData;
+    }
+
+    public static void setMyData(ArrayList<Data> myData) {
+        Data.myData = myData;
     }
 
     /**

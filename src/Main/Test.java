@@ -23,6 +23,12 @@ public class Test {
                     "\tprivate void nameVoid(int i; String s){\n" +
                     "\t\tSystem.out.println(i+s);\n" +
                     "\t}\n" +
+                    "\tprivate int add(int a; int b){\n" +
+                    "\t\treturn a+b;\n" +
+                    "\t}\n" +
+                    "\tprivate int nameFunction(){\n" +
+                    "\t\treturn 3.14;\n" +
+                    "\t}\n" +
                     "\n" +
                     "\tpublic static void main(String[] args){\n" +
                     "\t\tmainVoid(i, s);\n" +
