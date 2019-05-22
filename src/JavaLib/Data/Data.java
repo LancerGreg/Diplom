@@ -1,8 +1,6 @@
 package JavaLib.Data;
 
-import JavaLib.Token.TokenOOP;
-import JavaLib.Token.TokenTypeData;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
+import JavaLib.Token.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,13 +12,21 @@ public class Data {
 
     private String name;
     private String type;
+    private Object data;
+    private int positionX;
+    private int positionY;
+    private ArrayList<Data> localVar;
+
     public static ArrayList<Data> myData = new ArrayList<>();
 
     public Data() {
     }
 
-    public Data(String name) {
+    public Data(String name, Object data, int positionX, int positionY) {
         this.name = name;
+        this.data = data;
+        this.positionX = positionX;
+        this.positionY = positionY;
     }
 
     public String getName() {
@@ -39,6 +45,46 @@ public class Data {
         this.type = type;
     }
 
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public int getPositionX() {
+        return positionX;
+    }
+
+    public void setPositionX(int positionX) {
+        this.positionX = positionX;
+    }
+
+    public int getPositionY() {
+        return positionY;
+    }
+
+    public void setPositionY(int positionY) {
+        this.positionY = positionY;
+    }
+
+    public ArrayList<Data> getLocalVar() {
+        return localVar;
+    }
+
+    public void setLocalVar(ArrayList<Data> localVar) {
+        this.localVar = localVar;
+    }
+
+    public static ArrayList<Data> getMyData() {
+        return myData;
+    }
+
+    public static void setMyData(ArrayList<Data> myData) {
+        Data.myData = myData;
+    }
+
     /**
      * @return список всех возможных токенов которые будут класыфикувать наши обеткы в коде
      */
@@ -52,7 +98,6 @@ public class Data {
 
     //TODO :: if token
     //TODO :: значение
-    //TODO :: Стринги и чары
 
     /**
      * расподиление всех обектов та внесення в спиок
@@ -63,48 +108,85 @@ public class Data {
     public static ArrayList<Data> addAllObject(ArrayList<ArrayList<String>> splitCodeBySpace) {
         ArrayList<Data> listObject = new ArrayList<>();
         for (int i = 0; i < splitCodeBySpace.size(); i++) {
+            boolean flagCloseChar = false;
+            boolean flagCloseString = false;
+            boolean flagToken = false;
             for (int j = 0; j < splitCodeBySpace.get(i).size(); j++) {
-                if (splitCodeBySpace.get(i).get(j).chars().allMatch(Character::isDigit)) {
-                    try {
-                        boolean num = Boolean.getBoolean(splitCodeBySpace.get(i).get(j));
-                        listObject.add(new DataBoolean(splitCodeBySpace.get(i).get(j), num));
-                        DataNum.myData.add(new DataBoolean(splitCodeBySpace.get(i).get(j), num));
+                if (!flagToken) {
+                    //добавление чаров в обекты
+                    if (splitCodeBySpace.get(i).get(j).equals(TokenOfOperation.stringIndicatorChar)) {
+                        if (!flagCloseChar) {
+                            if (!splitCodeBySpace.get(i).get(j + 2).equals(TokenOfOperation.stringIndicatorChar)) {
+                                System.out.println("Error(" + i + "," + (j + 2) + ") java \"" +
+                                        splitCodeBySpace.get(i).get(j + 2) + "\" expected: " + "'");
+                                System.exit(0);
+                            }
+                            flagCloseChar = true;
+                            char symbol = splitCodeBySpace.get(i).get(j + 1).charAt(0);
+                            listObject.add(new DataChar(null, symbol, i, j + 1));
+                            DataChar.myData.add(new DataChar(null, symbol, i, j + 1));
+                            break;
+                        } else flagCloseChar = false;
+                    }
+                    //добавление строк в обекты
+                    if (splitCodeBySpace.get(i).get(j).equals(TokenOfOperation.stringIndicatorString)) {
+                        if (!flagCloseString) {
+                            if (!splitCodeBySpace.get(i).get(j + 2).equals(TokenOfOperation.stringIndicatorString)) {
+                                System.out.println("Error(" + i + "," + (j + 2) + ") java \"" +
+                                        splitCodeBySpace.get(i).get(j + 2) + "\" expected: " + "'");
+                                System.exit(0);
+                            }
+                            flagCloseString = true;
+                            String symbol = splitCodeBySpace.get(i).get(j + 1);
+                            listObject.add(new DataString(null, symbol, i, j + 1));
+                            DataString.myData.add(new DataString(null, symbol, i, j + 1));
+                            break;
+                        } else flagCloseString = false;
+                    }
+                    //булеанови обекты
+                    if (splitCodeBySpace.get(i).get(j).equals(TokenTypeData.stringFalse) ||
+                            splitCodeBySpace.get(i).get(j).equals(TokenTypeData.stringTrue)) {
+                        boolean num = Boolean.parseBoolean(splitCodeBySpace.get(i).get(j));
+                        listObject.add(new DataBoolean(null, num, i, j + 1));
+                        DataBoolean.myData.add(new DataBoolean(null, num, i, j + 1));
                         break;
-                    } catch (IllegalArgumentException z) {
+                    }
+                    //добавление чисел в обекты
+                    if (splitCodeBySpace.get(i).get(j).chars().allMatch(Character::isDigit)) {
                         try {
                             byte num = Byte.decode(splitCodeBySpace.get(i).get(j));
-                            listObject.add(new DataNum(splitCodeBySpace.get(i).get(j), num));
-                            DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(j), num));
+                            listObject.add(new DataNum(null, num, num, i, j));
+                            DataNum.myData.add(new DataNum(null, num, num, i, j));
                             break;
                         } catch (IllegalArgumentException e) {
                             try {
                                 short num = Short.decode(splitCodeBySpace.get(i).get(j));
-                                listObject.add(new DataNum(splitCodeBySpace.get(i).get(j), num));
-                                DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(j), num));
+                                listObject.add(new DataNum(null, num, num, i, j));
+                                DataNum.myData.add(new DataNum(null, num, num, i, j));
                                 break;
                             } catch (IllegalArgumentException ee) {
                                 try {
                                     int num = Integer.decode(splitCodeBySpace.get(i).get(j));
-                                    listObject.add(new DataNum(splitCodeBySpace.get(i).get(j), num));
-                                    DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(j), num));
+                                    listObject.add(new DataNum(null, num, num, i, j));
+                                    DataNum.myData.add(new DataNum(null, num, num, i, j));
                                     break;
                                 } catch (IllegalArgumentException eee) {
                                     try {
                                         long num = Long.decode(splitCodeBySpace.get(i).get(j));
-                                        listObject.add(new DataNum(splitCodeBySpace.get(i).get(j), num));
-                                        DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(j), num));
+                                        listObject.add(new DataNum(null, num, num, i, j));
+                                        DataNum.myData.add(new DataNum(null, num, num, i, j));
                                         break;
                                     } catch (IllegalArgumentException eeee) {
                                         try {
                                             float num = Float.parseFloat(splitCodeBySpace.get(i).get(j));
-                                            listObject.add(new DataNum(splitCodeBySpace.get(i).get(j), num));
-                                            DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(j), num));
+                                            listObject.add(new DataNum(null, num, num, i, j));
+                                            DataNum.myData.add(new DataNum(null, num, num, i, j));
                                             break;
                                         } catch (IllegalArgumentException eeeee) {
                                             try {
                                                 double num = Double.parseDouble(splitCodeBySpace.get(i).get(j));
-                                                listObject.add(new DataNum(splitCodeBySpace.get(i).get(j), num));
-                                                DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(j), num));
+                                                listObject.add(new DataNum(null, num, num, i, j));
+                                                DataNum.myData.add(new DataNum(null, num, num, i, j));
                                                 break;
                                             } catch (IllegalArgumentException eeeeee) {
                                                 System.out.println("Have a problem with big num : ("
@@ -116,74 +198,89 @@ public class Data {
                             }
                         }
                     }
-                }
-                for (int k = 0; k < tokenByData().size(); k++) {
-                    if (splitCodeBySpace.get(i).get(j).equals(tokenByData().get(k))) {
-                        switch (tokenByData().get(k)) {
-                            case TokenTypeData.stringBoolean: {
-                                listObject.add(new DataBoolean(splitCodeBySpace.get(i).get(j + 1), false));
-                                DataBoolean.myData.add(new DataBoolean(splitCodeBySpace.get(i).get(j + 1), false));
-                                break;
+                    for (int k = 0; k < tokenByData().size(); k++) {
+                        if (splitCodeBySpace.get(i).get(j).equals(tokenByData().get(k))) {
+                            int positionNameVal = 0;
+                            boolean flagName;
+                            for (int l = j; l < splitCodeBySpace.get(i).size(); l++) {
+                                flagName = false;
+                                for (int m = 0; m < Token.allTokenArrayList().size(); m++) {
+                                    if (Token.allTokenArrayList().get(m).equals(splitCodeBySpace.get(i).get(l))){
+                                        flagName = false;
+                                        break;
+                                    }else{
+                                        positionNameVal = l;
+                                        flagName = true;
+                                    }
+                                }
+                                if (flagName) break;
                             }
-                            case TokenTypeData.stringByte: {
-                                listObject.add(new DataNum(splitCodeBySpace.get(i).get(j + 1), 0));
-                                DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(j + 1), 0));
-                                break;
-                            }
-                            case TokenTypeData.stringChar: {
-                                listObject.add(new DataChar(splitCodeBySpace.get(i).get(j + 2), '0'));
-                                DataChar.myData.add(new DataChar(splitCodeBySpace.get(i).get(j + 2), '0'));
-                                break;
-                            }
-                            case TokenTypeData.stringShort: {
-                                listObject.add(new DataNum(splitCodeBySpace.get(i).get(j + 1), 0));
-                                DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(j + 1), 0));
-                                break;
-                            }
-                            case TokenTypeData.stringInt: {
-                                listObject.add(new DataNum(splitCodeBySpace.get(i).get(j + 1), 0));
-                                DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(j + 1), 0));
-                                break;
-                            }
-                            case TokenTypeData.stringLong: {
-                                listObject.add(new DataNum(splitCodeBySpace.get(i).get(j + 1), 0));
-                                DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(j + 1), 0));
-                                break;
-                            }
-                            case TokenTypeData.stringFloat: {
-                                listObject.add(new DataNum(splitCodeBySpace.get(i).get(j + 1), 0));
-                                DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(j + 1), 0));
-                                break;
-                            }
-                            case TokenTypeData.stringDouble: {
-                                listObject.add(new DataNum(splitCodeBySpace.get(i).get(j + 1), 0));
-                                DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(j + 1), 0));
-                                break;
-                            }
-                            case TokenTypeData.stringString: {
-                                listObject.add(new DataString(splitCodeBySpace.get(i).get(j + 1), ""));
-                                DataString.myData.add(new DataString(splitCodeBySpace.get(i).get(j + 1), ""));
-                                break;
-                            }
-                            case TokenOOP.stringClass: {
-                                listObject.add(new DataClass(splitCodeBySpace.get(i).get(j + 1)));
-                                DataClass.myData.add(new DataClass(splitCodeBySpace.get(i).get(j + 1)));
-                                break;
-                            }
-                            case TokenTypeData.stringVoid: {
-                                listObject.add(new DataVoid(splitCodeBySpace.get(i).get(j + 1)));
-                                DataVoid.myData.add(new DataVoid(splitCodeBySpace.get(i).get(j + 1)));
-                                break;
-                            }
-                            case TokenOOP.stringInterface: {
-                                listObject.add(new DataInterface(splitCodeBySpace.get(i).get(j + 1)));
-                                DataClass.myData.add(new DataInterface(splitCodeBySpace.get(i).get(j + 1)));
-                                break;
-                            }
-                            default: {
-                                listObject.add(new DataClass(splitCodeBySpace.get(i).get(j)));
-                                DataClass.myData.add(new DataClass(splitCodeBySpace.get(i).get(j + 1)));
-                                break;
+                            switch (tokenByData().get(k)) {
+                                case TokenTypeData.stringBoolean: {
+                                    listObject.add(new DataBoolean(splitCodeBySpace.get(i).get(positionNameVal), null, i, positionNameVal));
+                                    DataBoolean.myData.add(new DataBoolean(splitCodeBySpace.get(i).get(positionNameVal), null, i, positionNameVal));
+                                    break;
+                                }
+                                case TokenTypeData.stringByte: {
+                                    listObject.add(new DataNum(splitCodeBySpace.get(i).get(positionNameVal), 0, 0, i, positionNameVal));
+                                    DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(positionNameVal), 0, 0, i, positionNameVal));
+                                    break;
+                                }
+                                case TokenTypeData.stringChar: {
+                                    listObject.add(new DataChar(splitCodeBySpace.get(i).get(positionNameVal), 0, i, positionNameVal));
+                                    DataChar.myData.add(new DataChar(splitCodeBySpace.get(i).get(positionNameVal), 0, i, positionNameVal));
+                                    break;
+                                }
+                                case TokenTypeData.stringShort: {
+                                    listObject.add(new DataNum(splitCodeBySpace.get(i).get(positionNameVal), 0, 0, i, positionNameVal));
+                                    DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(positionNameVal), 0, 0, i, positionNameVal));
+                                    break;
+                                }
+                                case TokenTypeData.stringInt: {
+                                    listObject.add(new DataNum(splitCodeBySpace.get(i).get(positionNameVal), 0, 0, i, positionNameVal));
+                                    DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(positionNameVal), 0, 0, i, positionNameVal));
+                                    break;
+                                }
+                                case TokenTypeData.stringLong: {
+                                    listObject.add(new DataNum(splitCodeBySpace.get(i).get(positionNameVal), 0, 0, i, positionNameVal));
+                                    DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(positionNameVal), 0, 0, i, positionNameVal));
+                                    break;
+                                }
+                                case TokenTypeData.stringFloat: {
+                                    listObject.add(new DataNum(splitCodeBySpace.get(i).get(positionNameVal), 0, 0, i, positionNameVal));
+                                    DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(positionNameVal), 0, 0, i, positionNameVal));
+                                    break;
+                                }
+                                case TokenTypeData.stringDouble: {
+                                    listObject.add(new DataNum(splitCodeBySpace.get(i).get(positionNameVal), 0, 0, i, positionNameVal));
+                                    DataNum.myData.add(new DataNum(splitCodeBySpace.get(i).get(positionNameVal), 0, 0, i, positionNameVal));
+                                    break;
+                                }
+                                case TokenTypeData.stringString: {
+                                    listObject.add(new DataString(splitCodeBySpace.get(i).get(positionNameVal), null, i, positionNameVal));
+                                    DataString.myData.add(new DataString(splitCodeBySpace.get(i).get(positionNameVal), null, i, positionNameVal));
+                                    break;
+                                }
+                                case TokenOOP.stringClass: {
+                                    listObject.add(new DataClass(splitCodeBySpace.get(i).get(positionNameVal), null, i, positionNameVal));
+                                    DataClass.myData.add(new DataClass(splitCodeBySpace.get(i).get(positionNameVal), null, i, positionNameVal));
+                                    break;
+                                }
+                                case TokenTypeData.stringVoid: {
+                                    listObject.add(new DataVoid(splitCodeBySpace.get(i).get(positionNameVal), null, i, positionNameVal));
+                                    DataVoid.myData.add(new DataVoid(splitCodeBySpace.get(i).get(positionNameVal), null, i, positionNameVal));
+                                    break;
+                                }
+                                case TokenOOP.stringInterface: {
+                                    listObject.add(new DataInterface(splitCodeBySpace.get(i).get(positionNameVal), null, i, positionNameVal));
+                                    DataClass.myData.add(new DataInterface(splitCodeBySpace.get(i).get(positionNameVal), null, i, positionNameVal));
+                                    break;
+                                }
+                                default: {
+                                    listObject.add(new DataClass(splitCodeBySpace.get(i).get(positionNameVal), null, i, positionNameVal));
+                                    DataClass.myData.add(new DataClass(splitCodeBySpace.get(i).get(positionNameVal), null, i, positionNameVal));
+                                    break;
+                                }
                             }
                         }
                     }

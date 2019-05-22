@@ -30,36 +30,25 @@ public class RuleOfStrongTyping {
      * @return тру если строгая типизация присудствует
      */
     public static boolean checkStrongTyping(ArrayList<ArrayList<String>> splitCodeBySpace,
-                                              String massage, int xstay, int ystay){
+                                            String massage, int xstay, int ystay) {
 
+        ArrayList<Data> listDataObject = Data.addAllObject(splitCodeBySpace);
         if (massage.equals(TokenOfOperation.equals)) {
-            String type = "";
-            for (int i = 0; i < Data.addAllObject(splitCodeBySpace).size(); i++) {
-                if (splitCodeBySpace.get(xstay).get(ystay - 1).equals(Data.addAllObject(splitCodeBySpace).get(i).getName())) {
-                    type = Data.addAllObject(splitCodeBySpace).get(i).getType();
-                    break;
-                }
-            }
-            for (int i = ystay + 1; i < splitCodeBySpace.get(xstay).size(); i++) {
-                boolean flag = false;
-                for (int j = 0; j < tokenByRuleByDataType().size(); j++) {
-                    if (splitCodeBySpace.get(xstay).get(i).equals(tokenByRuleByDataType().get(j))) {
-                        flag = true;
-                        break;
-                    }
-                }
-                if (!flag){
-                    for (int j = 0; j < Data.addAllObject(splitCodeBySpace).size(); j++) {
-                        if (splitCodeBySpace.get(xstay).get(i).equals(Data.addAllObject(splitCodeBySpace).get(j).getName())
-                                && Data.addAllObject(splitCodeBySpace).get(j).getType().equals(type)) {
-                            flag = true;
-                            break;
+            for (int i = 0; i < listDataObject.size(); i++) {
+                if (listDataObject.get(i).getPositionX() == xstay &&
+                        listDataObject.get(i).getPositionY() == ystay - 1 &&
+                        listDataObject.get(i).getName() != null) {
+                    for (int k = i; k < listDataObject.size(); k++) {
+                        if (!listDataObject.get(k).getType().equals(listDataObject.get(i).getType())){
+                            if (listDataObject.get(k).getPositionX() != listDataObject.get(i).getPositionX()) break;
+                            else {
+                                System.out.println("Error(" + xstay + "," + listDataObject.get(k).getPositionY() + ") java \"" +
+                                        listDataObject.get(k).getData() + "\" have type " + listDataObject.get(k).getType()
+                                        + " expected type: " + listDataObject.get(i).getType());
+                                return false;
+                            }
                         }
                     }
-                }
-                if (!flag) {
-                    System.out.println("Error(" + xstay + "," + i + ") java \"" + splitCodeBySpace.get(xstay).get(i) + "\" expected type: " + type);
-                    return false;
                 }
             }
         }

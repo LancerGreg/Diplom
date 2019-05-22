@@ -12,12 +12,22 @@ public class Test {
     public static String code =
             "class nameClass{\n" +
                     "\n" +
-                    "\tpublic static final int i = 1454545434343433472468783732;\n" +
+                    "\tpublic static final int i = 43453;\n" +
                     "\n" +
                     "\tpublic static String s = \" lol\";\n" +
                     "\n" +
+                    "\tpublic static char c = \'c\';\n" +
+                    "\n" +
+                    "\tpublic static boolean b = true;\n" +
+                    "\n" +
                     "\tprivate void nameVoid(int i; String s){\n" +
                     "\t\tSystem.out.println(i+s);\n" +
+                    "\t}\n" +
+                    "\tprivate int add(int a; int b){\n" +
+                    "\t\treturn a+b;\n" +
+                    "\t}\n" +
+                    "\tprivate int nameFunction(){\n" +
+                    "\t\treturn 3.14;\n" +
                     "\t}\n" +
                     "\n" +
                     "\tpublic static void main(String[] args){\n" +
@@ -55,14 +65,15 @@ public class Test {
     public static void showAllObject() throws ClassNotFoundException {
         ArrayList<Data> addAllObject = Data.addAllObject(splitCodeBySpace);
         for (int i = 0; i < addAllObject.size(); i++) {
-            System.out.println("Type - " + addAllObject.get(i).getType() + "\t - Name - " + addAllObject.get(i).getName());
+            System.out.println("Type - " + addAllObject.get(i).getType()
+                    + "\t - Name - " + addAllObject.get(i).getName()
+                    + "\t - Value - " + addAllObject.get(i).getData());
         }
     }
 
     public static void showRules() {
         System.out.println(JavaRules.JavaRules(splitCodeBySpace));
     }
-
 
 
 }
