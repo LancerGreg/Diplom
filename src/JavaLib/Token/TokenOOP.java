@@ -1,6 +1,6 @@
 package JavaLib.Token;
 
-public class TokenOOP extends Token{
+public class TokenOOP extends Token {
 
     public static final String stringPublic = "public";
     public static final String stringProtected = "protected";
@@ -22,7 +22,6 @@ public class TokenOOP extends Token{
     }
 
     /**
-     *
      * @return масив всех возможных токенов до класа(до)
      */
     public static String[] tokenForClass() {
@@ -30,26 +29,28 @@ public class TokenOOP extends Token{
     }
 
     /**
-     *
      * @return масив всех возможных токенов инкапусляции(после)
      */
-    public static String[] tokenByType(){
+    public static String[] tokenByType() {
         return new String[]{stringClass, stringAbstract, stringInterface, stringStatic, stringFinal};
     }
 
     /**
-     *
      * @return масив всех возможных токенов для инкапсуляции(до)
      */
-    public static String[] tokenByType2(){
+    public static String[] tokenByType2() {
         return new String[]{stringStatic, stringFinal};
     }
 
-    public static String[] tokenForFinal(){
+    public static String[] tokenForFinal() {
         return new String[]{stringStatic, stringInterface, stringClass, stringAbstract, stringPublic, stringProtected, stringPrivate};
     }
 
-    public static String[] tokenForStatic(){
+    public static String[] tokenForStatic() {
         return new String[]{stringFinal, stringInterface, stringClass, stringAbstract, stringPublic, stringProtected, stringPrivate};
+    }
+
+    public static String[] tokenForRulesOfFunction() {
+        return new String[]{stringPublic, stringProtected, stringPrivate, stringStatic, stringAbstract};
     }
 }
