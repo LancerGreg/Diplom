@@ -85,6 +85,16 @@ public class Data {
         Data.myData = myData;
     }
 
+    public static Data returnDataFromPosition(ArrayList<Data> dataObject, int positionX, int positionY){
+        Data thisData = new Data(null, null, 0 ,0);
+        for (int i = 0; i < dataObject.size(); i++) {
+            if (dataObject.get(i).getPositionX() == positionX &&
+                dataObject.get(i).getPositionY() == positionY)
+                thisData = dataObject.get(i);
+        }
+        return thisData;
+    }
+
     /**
      * @return список всех возможных токенов которые будут класыфикувать наши обеткы в коде
      */
